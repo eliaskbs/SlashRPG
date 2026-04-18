@@ -19,6 +19,9 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	
+	UPROPERTY(VisibleAnywhere ,BlueprintReadOnly)
+	TObjectPtr<UStaticMeshComponent> ItemMesh;
+	
 
 public:
 	
@@ -47,8 +50,7 @@ private:
 	
 	float RunningTime;
 	
-	UPROPERTY(VisibleAnywhere ,BlueprintReadOnly, meta=(AllowPrivateAccess=true))
-	TObjectPtr<UStaticMeshComponent> ItemMesh;
+	
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USphereComponent> Sphere;
 	

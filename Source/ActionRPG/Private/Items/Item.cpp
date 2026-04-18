@@ -3,6 +3,7 @@
 
 #include "Items/Item.h"
 
+#include "Character/SlashCharacter.h"
 #include "Components/SphereComponent.h"
 
 // Sets default values
@@ -38,20 +39,19 @@ float AItem::TransformedCos()
 void AItem::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                             UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	const FString OtherActorName = OtherActor->GetActorNameOrLabel();
-	if (GEngine)
+	if (ASlashCharacter* SlashCharacter = Cast<ASlashCharacter>(OtherActor))
 	{
-		GEngine->AddOnScreenDebugMessage(1, 30.f, FColor::Red, OtherActorName);
+		SlashCharacter->SetOverlappingItem(this);
 	}
+	
 }
 
 void AItem::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	const FString OtherActorName = OtherActor->GetActorNameOrLabel();
-	if (GEngine)
+	if (ASlashCharacter* SlashCharacter = Cast<ASlashCharacter>(OtherActor))
 	{
-		GEngine->AddOnScreenDebugMessage(1, 30.f, FColor::Red, TEXT("Exit on ITem"));
+		SlashCharacter->SetOverlappingItem(nullptr);
 	}
 }
 

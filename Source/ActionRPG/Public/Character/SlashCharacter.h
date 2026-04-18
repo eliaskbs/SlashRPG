@@ -4,16 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "CharacterTypes.h"
 #include "SlashCharacter.generated.h"
 
 class USpringArmComponent;
 class UCameraComponent;
-
 class UInputMappingContext;
 class UInputAction;
 class UGroomComponent;
+class AItem;
 
 struct FInputActionValue;
+
+
 
 UCLASS()
 class ACTIONRPG_API ASlashCharacter : public ACharacter
@@ -24,11 +27,16 @@ public:
 	ASlashCharacter();
 protected:
 	virtual void BeginPlay() override;
-	
 
 public:	
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	
+	FORCEINLINE void SetOverlappingItem(TObjectPtr<AItem> Item){ OverlappingItem = Item; }
+	
+	FORCEINLINE ECharacterState GetCharacterState() const { return CharacterState; }
+	
+	
 private:
 	UPROPERTY(VisibleAnywhere, Category="Camera")
 	TObjectPtr<USpringArmComponent> CameraBoom;
@@ -38,6 +46,12 @@ private:
 	TObjectPtr<UGroomComponent> Hair;
 	UPROPERTY(VisibleAnywhere, Category="Hair")
 	TObjectPtr<UGroomComponent> Eyebrows;
+	
+	UPROPERTY(VisibleInstanceOnly);
+	TObjectPtr<AItem> OverlappingItem;
+	
+	ECharacterState CharacterState = ECharacterState::ECS_Unequipped;
+	
 public:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UInputMappingContext> DefaultMappingContext;
@@ -48,8 +62,11 @@ public:
 	TObjectPtr<UInputAction> LookAction;
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UInputAction> JumpAction;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UInputAction> EquipAction;
 	
 
 	void HandleMove(const FInputActionValue& Value);
 	void HandleLook(const FInputActionValue& Value);
+	void HandledEquip(const FInputActionValue& Value);
 };

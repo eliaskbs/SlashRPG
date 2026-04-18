@@ -8,6 +8,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GroomComponent.h"
+#include "Items/Weapons/Weapon.h"
+#include "Items/Item.h"
 
 ASlashCharacter::ASlashCharacter()
 {
@@ -64,7 +66,8 @@ void ASlashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	{
 		EnhancedInput->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ASlashCharacter::HandleMove);
 		EnhancedInput->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASlashCharacter::HandleLook);
-		EnhancedInput->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ASlashCharacter::Jump);
+		EnhancedInput->BindAction(JumpAction, ETriggerEvent::Started, this, &ASlashCharacter::Jump);
+		EnhancedInput->BindAction(EquipAction, ETriggerEvent::Triggered, this, &ASlashCharacter::HandledEquip);
 	}
 
 }
@@ -88,6 +91,16 @@ void ASlashCharacter::HandleLook(const FInputActionValue& Value)
 	const FVector2D VectorAxis = Value.Get<FVector2D>();
 	AddControllerYawInput(VectorAxis.X);
 	AddControllerPitchInput(VectorAxis.Y);
+}
+
+void ASlashCharacter::HandledEquip(const FInputActionValue& Value)
+{
+	auto* Weapon = Cast<AWeapon>(OverlappingItem);
+	if (Weapon)
+	{
+		Weapon->Equip(GetMesh(), FName("RightHandSocket"));
+		CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
+	}
 }
 
 
