@@ -8,6 +8,13 @@
 
 class USphereComponent;
 class UStaticMeshComponent;
+
+enum class EItemState : uint8
+{
+	EIS_Hovering UMETA(DisplayName = "Hovering"),
+	EIS_Equipped UMETA(DisplayName = "Equipped"),
+};
+
 UCLASS()
 class ACTIONRPG_API AItem : public AActor
 {
@@ -44,6 +51,7 @@ public:
 	UFUNCTION()
 	virtual void OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 	
+	EItemState ItemState = EItemState::EIS_Hovering;
 	
 private:
 	
